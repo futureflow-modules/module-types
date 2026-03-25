@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 // ─── Module Definition ───────────────────────────────────────
 
@@ -20,6 +20,17 @@ export interface ModuleDefinition {
   quickActions?: ModuleQuickAction[];
   /** Custom layout components registered by key */
   layoutComponents?: Record<string, ComponentType<any>>;
+
+  /** Blocks injected into dynamic entity detail pages */
+  entityBlocks?: ModuleEntityBlock[];
+  /** Supabase schemas & tables this module owns */
+  schemas?: ModuleSchema[];
+  /** SQL migrations shipped with this module */
+  migrations?: ModuleMigration[];
+  /** Settings panel component (rendered in /settings) */
+  settingsPanel?: ComponentType<any>;
+  /** Context providers wrapping the app when module is active */
+  providers?: ComponentType<{ children: ReactNode }>[];
 }
 
 // ─── Routes ──────────────────────────────────────────────────
@@ -74,4 +85,65 @@ export interface QuickActionProps {
   record: Record<string, any>;
   context: ActionContext;
   onClose: () => void;
+}
+
+// ─── Entity Blocks (injected into entity detail pages) ──────
+
+export interface ModuleEntityBlock {
+  /** Block type key, e.g. "conversations", "follow_ups", "file_hub" */
+  type: string;
+  /** Display name shown in layout builder */
+  label: string;
+  /** The React component to render inside the entity page */
+  component: ComponentType<EntityBlockProps>;
+  /** Default config for the layout builder */
+  defaultConfig?: Record<string, any>;
+  /** Lucide icon name for the layout builder */
+  icon?: string;
+}
+
+export interface EntityBlockProps {
+  /** Layout component config from page_layouts */
+  config: Record<string, any>;
+  /** The full entity record data */
+  data: Record<string, unknown>;
+  /** Record UUID */
+  recordId: string;
+  /** Entity type key, e.g. "customers" */
+  entityType: string;
+  /** DB table name */
+  tableName: string;
+  /** Block title from layout config */
+  title?: string;
+  /** Whether the page is in edit mode */
+  isEditing?: boolean;
+  /** Field change handler */
+  onChange?: (fieldName: string, value: unknown) => void;
+}
+
+// ─── Schema Registration ────────────────────────────────────
+
+export interface ModuleSchema {
+  /** Schema name, e.g. "messaging" */
+  name: string;
+  /** Tables belonging to this schema */
+  tables: ModuleTable[];
+}
+
+export interface ModuleTable {
+  /** Table name, e.g. "conversations" */
+  name: string;
+  /** Schema name, e.g. "messaging" */
+  schema: string;
+}
+
+// ─── Migrations ─────────────────────────────────────────────
+
+export interface ModuleMigration {
+  /** Migration version, e.g. "001", "002" — run in order */
+  version: string;
+  /** SQL to execute */
+  sql: string;
+  /** Human-readable description */
+  description: string;
 }
