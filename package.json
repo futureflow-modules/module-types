@@ -1,0 +1,26 @@
+{
+  "name": "@futureflow-modules/module-types",
+  "version": "1.0.0",
+  "description": "Shared type definitions for FutureFlow plugin modules",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/futureflow-modules/module-types.git"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^19.0.0"
+  }
+}
