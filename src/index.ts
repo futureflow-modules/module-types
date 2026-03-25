@@ -31,6 +31,10 @@ export interface ModuleDefinition {
   settingsPanel?: ComponentType<any>;
   /** Context providers wrapping the app when module is active */
   providers?: ComponentType<{ children: ReactNode }>[];
+  /** API paths that should bypass CSRF (e.g. public signing endpoints) */
+  publicApiPaths?: string[];
+  /** Public pages that need a route in (public) directory: { path, importFrom } */
+  publicPages?: { path: string; importFrom: string }[];
 }
 
 // ─── Routes ──────────────────────────────────────────────────
